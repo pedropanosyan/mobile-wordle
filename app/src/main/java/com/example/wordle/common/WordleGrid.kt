@@ -10,7 +10,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -19,15 +18,14 @@ fun WordleGrid(
     solution: String,
     currentRow: Int
 ) {
-    Log.d("WordleGrid", "Current row: $currentRow")
-    Log.d("WordleGrid", "Guesses: $guesses")
-    Log.d("WordleGrid", "Solution: $solution")
+
     Column(
         modifier = Modifier
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         for ((rowIndex, guess) in guesses.withIndex()) {
+            val paintedCounts = mutableMapOf<Char, Int>()
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
@@ -39,7 +37,8 @@ fun WordleGrid(
                             solution,
                             colIndex = index,
                             rowIndex,
-                            currentRow
+                            currentRow,
+                            paintedCounts
                         )
                     )
                 }
@@ -70,32 +69,30 @@ fun getBoxColor(
     solution: String,
     colIndex: Int,
     rowIndex: Int,
-    currentRow: Int
+    currentRow: Int,
+    paintedCounts: MutableMap<Char, Int>
 ): Color {
-    Log.d("getBoxColor", "Char: $char")
+
+    val solutionCharCounts = solution.groupingBy { it }.eachCount()
+
     return when {
         rowIndex >= currentRow -> MaterialTheme.colorScheme.outline
-        char.isNotEmpty() && solution[colIndex] == char.first() -> MaterialTheme.colorScheme.primary
-        char.isNotEmpty() && solution.contains(char.first()) -> MaterialTheme.colorScheme.secondary
-        else -> MaterialTheme.colorScheme.tertiary
-    }
-}
+        char.isNotEmpty() && solution[colIndex] == char.first() -> {
+            paintedCounts[char[0]] = (paintedCounts[char[0]] ?: 0) + 1
+            MaterialTheme.colorScheme.primary
+        }
+        char.isNotEmpty() && solution.contains(char.first()) -> {
+            val currentChar = char[0]
+            val solutionCount = solutionCharCounts[currentChar] ?: 0
+            val paintedCount = paintedCounts[currentChar] ?: 0
 
-@Preview(showBackground = true)
-@Composable
-fun WordleGridPreview() {
-    MaterialTheme {
-        WordleGrid(
-            guesses = listOf(
-                listOf("", "", "", "", ""),
-                listOf("", "", "", "", ""),
-                listOf("", "", "", "", ""),
-                listOf("", "", "", "", ""),
-                listOf("", "", "", "", ""),
-                listOf("", "", "", "", "")
-            ),
-            solution = "CRANE",
-            1
-        )
+            if (paintedCount < solutionCount) {
+                paintedCounts[currentChar] = paintedCount + 1
+                MaterialTheme.colorScheme.secondary
+            } else {
+                MaterialTheme.colorScheme.tertiary
+            }
+        }
+        else -> MaterialTheme.colorScheme.tertiary
     }
 }

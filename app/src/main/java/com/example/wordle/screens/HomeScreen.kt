@@ -19,6 +19,7 @@ import getRandomWord
 fun WordleScreen() {
     var isPlaying by remember { mutableStateOf(false) }
     var solution by remember { mutableStateOf("") }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
