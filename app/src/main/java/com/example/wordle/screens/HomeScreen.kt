@@ -17,12 +17,15 @@ import getRandomWord
 import java.text.Normalizer
 
 @Composable
-fun WordleScreen() {
+fun WordleScreen(
+    modifier: Modifier = Modifier,
+    onNavigateToGame: () -> Unit
+) {
     var isPlaying by remember { mutableStateOf(false) }
     var solution by remember { mutableStateOf("") }
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .padding(16.dp),
         verticalArrangement = Arrangement.SpaceBetween,
