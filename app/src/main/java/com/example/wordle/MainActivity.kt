@@ -9,6 +9,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.wordle.screens.ProfileScreen
 import com.example.wordle.ui.theme.WordleTheme
 import com.example.wordle.screens.WordleScreen
 
@@ -23,6 +24,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     WordleScreen()
+                    //ProfileScreen()
                 }
             }
         }
@@ -37,7 +39,8 @@ fun DefaultPreview() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            WordleScreen()
+             WordleScreen()
+           // ProfileScreen()
         }
     }
 }

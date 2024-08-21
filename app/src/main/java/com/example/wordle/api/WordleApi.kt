@@ -13,8 +13,8 @@ fun getRandomWord(length: Int, lang: String, onSuccess: (word: String) -> Unit) 
             val connection: HttpURLConnection = url.openConnection() as HttpURLConnection
 
             connection.requestMethod = "GET"
-            connection.connectTimeout = 5000 // Optional: Set a timeout value for the connection
-            connection.readTimeout = 5000    // Optional: Set a timeout value for reading the response
+            connection.connectTimeout = 5000
+            connection.readTimeout = 5000
 
             val responseCode = connection.responseCode
             Log.d("getRandomWord", "Response Code: $responseCode")

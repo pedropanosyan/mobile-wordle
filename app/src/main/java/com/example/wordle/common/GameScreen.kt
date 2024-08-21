@@ -22,7 +22,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.wordle.R
 import com.example.wordle.screens.createInitialGuessesMatrix
 import java.io.BufferedReader
 import java.io.InputStreamReader
@@ -39,7 +41,6 @@ fun GameScreen (solution: String, quitGame: () -> Unit, startAnotherGame: () -> 
     val context = LocalContext.current
     val wordsSet by remember { mutableStateOf(readWordsFromFile(context, "diccionario_espanol.txt")) }
 
-    Log.d("GameScreen", "Solution: $solution")
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -90,18 +91,18 @@ fun GameScreen (solution: String, quitGame: () -> Unit, startAnotherGame: () -> 
         if (result.isNotEmpty()) {
             if (result == "won") {
                 Text(
-                    text = "Felicidades! Ganaste!",
+                    text = stringResource(id = R.string.congratulations_you_won),
                     style = MaterialTheme.typography.headlineMedium
                 )
             } else {
                 val formattedSolution = solution.lowercase().replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
                 Column {
                     Text(
-                        text = "Perdiste!",
+                        text = stringResource(id = R.string.you_lost),
                         style = MaterialTheme.typography.headlineMedium
                     )
                     Text(
-                        text = "La palabra era: $formattedSolution",
+                        text = stringResource(id = R.string.the_word_was, formattedSolution),
                         style = MaterialTheme.typography.headlineMedium
                     )
                 }
@@ -119,7 +120,7 @@ fun GameScreen (solution: String, quitGame: () -> Unit, startAnotherGame: () -> 
                     result = ""
                 }) {
                     Text(
-                        text = "Play again",
+                        text = stringResource(id = R.string.play_again),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onError
                     )
@@ -133,7 +134,7 @@ fun GameScreen (solution: String, quitGame: () -> Unit, startAnotherGame: () -> 
                 result = ""
             }) {
                 Text(
-                    text = "Quit Game",
+                    text = stringResource(id = R.string.quit_game),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onError
                 )
@@ -144,7 +145,7 @@ fun GameScreen (solution: String, quitGame: () -> Unit, startAnotherGame: () -> 
 }
 
 fun checkIfGuessIsCorrect(guess: List<String>, solution: String): Boolean {
-    return guess.joinToString("") == solution
+    return guess.joinToString("").lowercase() == solution
 }
 
 fun normalize(word: String): String {

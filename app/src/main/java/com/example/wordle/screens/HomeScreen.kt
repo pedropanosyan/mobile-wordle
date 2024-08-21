@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.sp
 import com.example.wordle.common.GameScreen
 import com.example.wordle.ui.theme.WordleTheme
 import getRandomWord
+import java.text.Normalizer
 
 @Composable
 fun WordleScreen() {
@@ -43,7 +44,7 @@ fun WordleScreen() {
                     getRandomWord(
                         5,
                         "es",
-                        onSuccess = { word -> solution = word.uppercase() }
+                        onSuccess = { word -> solution = normalizeWord(word) }
                     )
                 }
             )
@@ -70,6 +71,13 @@ fun WordleScreen() {
 
 fun createInitialGuessesMatrix(): List<MutableList<String>> {
     return MutableList(6) { MutableList(5) { "" } }
+}
+
+
+fun normalizeWord(word: String): String {
+    return Normalizer.normalize(word, Normalizer.Form.NFD)
+        .replace(Regex("\\p{M}"), "")
+        .uppercase()
 }
 
 

@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Wordle</string>
+    <string name="congratulations_you_won">Felicidades! Ganaste!</string>
+    <string name="you_lost">Perdiste!</string>
+    <string name="the_word_was">La palabra era: %1$s</string>
+    <string name="play_again">Play again</string>
+    <string name="quit_game">Quit Game</string>
 </resources>
