@@ -13,16 +13,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.wordle.common.GameScreen
 import com.example.wordle.ui.theme.WordleTheme
-import getRandomWord
+import com.example.wordleViewModel.WordleViewModel
 import java.text.Normalizer
 
 @Composable
 fun WordleScreen(
     modifier: Modifier = Modifier,
-    onNavigateToGame: () -> Unit
+    onNavigateToGame: () -> Unit,
+    viewModel: WordleViewModel
 ) {
-    var isPlaying by remember { mutableStateOf(false) }
-    var solution by remember { mutableStateOf("") }
 
     Column(
         modifier = modifier
@@ -39,25 +38,23 @@ fun WordleScreen(
                 )
 
         )
-        if (isPlaying) {
+        if (viewModel.isPlaying) {
             GameScreen(
-                solution = solution,
-                quitGame = { isPlaying = false },
+                solution = viewModel.solution,
+                quitGame = { viewModel.setIsPlaying(false) },
                 startAnotherGame = {
-                    getRandomWord(
+                    viewModel.fetchRandomWord (
                         5,
                         "es",
-                        onSuccess = { word -> solution = normalizeWord(word) }
                     )
                 }
             )
         } else {
             Button(onClick = {
-                isPlaying = true
-                getRandomWord(
+                viewModel.setIsPlaying(true)
+                viewModel.fetchRandomWord(
                     5,
                     "es",
-                    onSuccess = { word -> solution = word.uppercase() }
                 )
             }) {
                 Text(
@@ -69,18 +66,6 @@ fun WordleScreen(
         }
 
     }
-}
-
-
-fun createInitialGuessesMatrix(): List<MutableList<String>> {
-    return MutableList(6) { MutableList(5) { "" } }
-}
-
-
-fun normalizeWord(word: String): String {
-    return Normalizer.normalize(word, Normalizer.Form.NFD)
-        .replace(Regex("\\p{M}"), "")
-        .uppercase()
 }
 
 

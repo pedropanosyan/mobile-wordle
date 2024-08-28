@@ -34,13 +34,6 @@ fun GameScreen (
     startAnotherGame: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var guesses by remember { mutableStateOf(createInitialGuessesMatrix()) }
-    var currentColumn by remember { mutableIntStateOf(0) }
-    var currentRow by remember { mutableIntStateOf(0) }
-    var result by remember { mutableStateOf("") }
-
-    val context = LocalContext.current
-    val wordsSet by remember { mutableStateOf(readWordsFromFile(context, "diccionario_espanol.txt")) }
 
     Column(
         modifier = modifier
@@ -49,7 +42,7 @@ fun GameScreen (
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        WordleGrid(guesses = guesses, solution = solution, currentRow = currentRow)
+        WordleGrid(solution = solution, currentRow = currentRow)
         if (result.isEmpty()) {
             WordleKeyboard(
                 onKeyPress = { char ->
@@ -155,20 +148,6 @@ fun normalize(word: String): String {
         .uppercase()
 }
 
-
-fun readWordsFromFile(context: Context, fileName: String): Set<String> {
-    val wordsSet = mutableSetOf<String>()
-    context.assets.open(fileName).use { inputStream ->
-        BufferedReader(InputStreamReader(inputStream)).use { reader ->
-            reader.forEachLine { line ->
-                line.split("\\s+".toRegex()).forEach { word ->
-                    wordsSet.add(normalize(word.trim()))
-                }
-            }
-        }
-    }
-    return wordsSet
-}
 
 fun wordExists(wordsSet: Set<String>, word: String): Boolean {
     return wordsSet.contains(normalize(word))
