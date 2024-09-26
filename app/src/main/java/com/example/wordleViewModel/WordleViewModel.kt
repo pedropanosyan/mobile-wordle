@@ -1,13 +1,13 @@
 package com.example.wordleViewModel
 
+import android.app.Application
 import android.content.Context
+import android.util.Log
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.wordle.common.normalize
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -19,51 +19,64 @@ import java.net.URI
 import java.net.URL
 import java.text.Normalizer
 import javax.inject.Inject
-import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.AndroidViewModel
+import com.example.wordle.apiManager.ApiServiceImpl
 
+enum class BoxColor {
+    OUTLINE,
+    PRIMARY,
+    SECONDARY,
+    TERTIARY
+}
 
 @HiltViewModel
-class WordleViewModel @Inject constructor() : ViewModel() {
+class WordleViewModel @Inject constructor(
+    application: Application,
+    private val apiServiceImpl: ApiServiceImpl
+) : AndroidViewModel(application) {
 
-    val context = Act
+    var solution by mutableStateOf("")
+    var isPlaying by mutableStateOf(false)
+    var guesses by mutableStateOf(createInitialGuessesList())
+    var currentColumn by mutableIntStateOf(0)
+    var currentRow by mutableIntStateOf(0)
+    var result by mutableStateOf("")
+    private var wordSet by mutableStateOf<Set<String>>(emptySet())
+    val keyboardRows = listOf(
+        "QWERTYUIO",
+        "PASDFGHJK",
+        "ZXCVBNÑML"
+    )
 
-    var solution: String by mutableStateOf("")
-    var isPlaying: Boolean = false
-    var guesses = createInitialGuessesMatrix()
-    var currentColumn = 0
-    var currentRow = 0
-    var result = ""
-    var worldSet = mutableStateOf(readWordsFromFile(context, "diccionario_espanol.txt"))
+    private val context: Context
+        get() = getApplication<Application>().applicationContext
 
-    fun fetchRandomWord(length: Int, lang: String) {
-        viewModelScope.launch {
-            val word = getRandomWord(length, lang)
-            solution = normalizeWord(word)
+    init {
+        loadWordsFromFile("diccionario_espanol.txt")
+    }
+
+    private fun loadWordsFromFile(fileName: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val words = readWordsFromFile(fileName)
+            wordSet = words
         }
     }
 
-    private suspend fun getRandomWord(length: Int, lang: String): String {
-        return withContext(Dispatchers.IO) {
-            val apiUrl = "https://random-word-api.herokuapp.com/word?length=$length&lang=$lang"
-            try {
-                val url: URL = URI.create(apiUrl).toURL()
-                val connection: HttpURLConnection = url.openConnection() as HttpURLConnection
-
-                connection.requestMethod = "GET"
-                connection.connectTimeout = 5000
-                connection.readTimeout = 5000
-
-                val responseCode = connection.responseCode
-                if (responseCode == HttpURLConnection.HTTP_OK) {
-                    val response = connection.inputStream.bufferedReader().use { it.readText() }
-                    return@withContext response.trim('[', ']', '"')
-                } else {
-                    throw Exception("Failed to fetch word. Response Code: $responseCode")
-                }
-            } catch (e: Exception) {
-                throw Exception("Exception: ${e.message}", e)
+    fun fetchRandomWord() {
+        apiServiceImpl.getRandomWord(
+            context,
+            onSuccess = { word ->
+                solution = normalizeWord(word)
+                Log.d("WordleViewModel", "API Success: Fetched word: $word")
+                isPlaying = true
+            },
+            onFail = {
+                Log.d("WordleViewModel", "API Failure: Failed to fetch word")
+            },
+            loadingFinished = {
+                Log.d("WordleViewModel", "API call finished")
             }
-        }
+        )
     }
 
     private fun normalizeWord(word: String): String {
@@ -72,25 +85,121 @@ class WordleViewModel @Inject constructor() : ViewModel() {
             .uppercase()
     }
 
-    public fun setIsPlaying(value: Boolean) {
-        isPlaying = value
+    fun playGame() {
+        guesses = createInitialGuessesList()
+        currentRow = 0
+        currentColumn = 0
+        result = ""
+        isPlaying = true
+        fetchRandomWord()
     }
-}
 
-fun createInitialGuessesMatrix(): List<MutableList<String>> {
-    return MutableList(6) { MutableList(5) { "" } }
-}
+    fun quitGame() {
+        isPlaying = false
+        guesses = createInitialGuessesList()
+        currentRow = 0
+        currentColumn = 0
+        result = ""
+    }
 
-fun readWordsFromFile(context: Context, fileName: String): Set<String> {
-    val wordsSet = mutableSetOf<String>()
-    context.assets.open(fileName).use { inputStream ->
-        BufferedReader(InputStreamReader(inputStream)).use { reader ->
-            reader.forEachLine { line ->
-                line.split("\\s+".toRegex()).forEach { word ->
-                    wordsSet.add(normalize(word.trim()))
-                }
+
+    fun enterLetter(letter: String) {
+        if (currentColumn < 5) {
+            guesses = guesses.toMutableList().apply {
+                this[currentRow] = this[currentRow] + letter
+            }
+            currentColumn++
+        }
+    }
+
+    fun submitWord() {
+        if (currentColumn == 5) {
+            if (wordSet.isEmpty()) return
+            if (!wordExists(wordSet, guesses[currentRow])) return
+            if (checkIfGuessIsCorrect(guesses[currentRow], solution)) result = "won"
+            if (currentRow == 5) result = "lost"
+            currentRow++
+            currentColumn = 0
+        }
+    }
+
+    fun deleteLetter() {
+        if (currentColumn > 0) {
+            currentColumn--
+            guesses = guesses.toMutableList().apply {
+                this[currentRow] = this[currentRow].dropLast(1)
             }
         }
     }
-    return wordsSet
+
+    fun getFormattedSolution(): String {
+        return solution.lowercase().replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
+    }
+
+    fun hasWon(): Boolean {
+        return result == "won"
+    }
+
+    fun getBoxColor(
+        char: String,
+        colIndex: Int,
+        rowIndex: Int,
+        paintedCounts: MutableMap<Char, Int>
+    ): BoxColor {
+        val solutionCharCounts = solution.groupingBy { it }.eachCount()
+        return when {
+            rowIndex >= currentRow -> BoxColor.OUTLINE
+            char.isNotEmpty() && solution[colIndex] == char.first() -> {
+                paintedCounts[char[0]] = (paintedCounts[char[0]] ?: 0) + 1
+                BoxColor.PRIMARY
+            }
+            char.isNotEmpty() && solution.contains(char.first()) -> {
+                val currentChar = char[0]
+                val solutionCount = solutionCharCounts[currentChar] ?: 0
+                val paintedCount = paintedCounts[currentChar] ?: 0
+
+                if (paintedCount < solutionCount) {
+                    paintedCounts[currentChar] = paintedCount + 1
+                    BoxColor.SECONDARY
+                } else {
+                    BoxColor.TERTIARY
+                }
+            }
+            else -> BoxColor.TERTIARY
+        }
+    }
+
+    private fun readWordsFromFile(fileName: String): Set<String> {
+        val wordsSet = mutableSetOf<String>()
+        context.assets.open(fileName).use { inputStream ->
+            BufferedReader(InputStreamReader(inputStream)).use { reader ->
+                reader.forEachLine { line ->
+                    line.split("\\s+".toRegex()).forEach { word ->
+                        wordsSet.add(normalize(word.trim()))
+                    }
+                }
+            }
+        }
+        return wordsSet
+    }
+
+
+}
+
+private fun createInitialGuessesList(): List<String> {
+    return MutableList(6) { "" }
+}
+
+private fun wordExists(wordsSet: Set<String>, word: String): Boolean {
+    return wordsSet.contains(normalize(word))
+}
+
+fun checkIfGuessIsCorrect(guess: String, solution: String): Boolean {
+    return guess.lowercase() == solution
+}
+
+fun normalize(word: String): String {
+    return Normalizer.normalize(word, Normalizer.Form.NFD)
+        .replace("\\p{InCombiningDiacriticalMarks}+".toRegex(), "")
+        .uppercase()
 }

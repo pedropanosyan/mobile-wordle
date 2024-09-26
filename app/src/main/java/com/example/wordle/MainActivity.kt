@@ -14,7 +14,9 @@ import androidx.navigation.compose.rememberNavController
 import com.example.wordle.navigation.BottomBar
 import com.example.wordle.navigation.NavHostComposable
 import com.example.wordle.ui.theme.WordleTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

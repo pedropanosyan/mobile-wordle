@@ -1,5 +1,6 @@
 package com.example.wordle.common
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -10,16 +11,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.wordleViewModel.WordleViewModel
 
 @Composable
-fun WordleKeyboard(onKeyPress: (option: String) -> Unit, onEnter: () -> Unit, onDelete: () -> Unit) {
-    val keyboardRows = listOf(
-        "QWERTYUIO",
-        "PASDFGHJK",
-        "ZXCVBNÑML"
-    )
+fun WordleKeyboard()
+{
+    val viewModel = hiltViewModel<WordleViewModel>()
+    val solution = viewModel.solution
+    val guesses = viewModel.guesses
+    val currentRow = viewModel.currentRow
 
     Column(
         modifier = Modifier
@@ -28,34 +30,44 @@ fun WordleKeyboard(onKeyPress: (option: String) -> Unit, onEnter: () -> Unit, on
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        for (row in keyboardRows) {
+        for (row in viewModel.keyboardRows) {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 for (option in row) {
-                    KeyButton(option = option.toString(), onKeyPress = onKeyPress)
+                    KeyButton(option = option.toString(), onKeyPress = { char ->
+                        viewModel.enterLetter(
+                            char
+                        )
+                    },
+                        solution = solution,
+                        guesses = guesses,
+                        currentRow = currentRow
+                    )
                 }
             }
         }
-        // Add the fourth row for Enter and Delete keys
         Row(
             horizontalArrangement = Arrangement.spacedBy(4.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            SpecialKeyButton(text = "Enter", onClick = onEnter)
+            SpecialKeyButton(text = "Enter", onClick = { viewModel.submitWord() })
             Spacer(modifier = Modifier.width(4.dp))
-            SpecialKeyButton(text = "Delete", onClick = onDelete)
+            SpecialKeyButton(text = "Delete", onClick = { viewModel.deleteLetter() })
         }
     }
 }
 
 @Composable
-fun KeyButton(option: String, onKeyPress: (option: String) -> Unit) {
+fun KeyButton(option: String, onKeyPress: (option: String) -> Unit, solution: String, guesses: List<String>, currentRow: Int) {
+    // delete the first row of guesses
+    val keyColor = getColour(solution, guesses, option, currentRow)
+
     Box(
         modifier = Modifier
             .size(28.dp)
-            .background(MaterialTheme.colorScheme.onSurface, RoundedCornerShape(4.dp))
+            .background(keyColor, RoundedCornerShape(4.dp))
             .padding(2.dp)
             .clickable { onKeyPress(option) },
         contentAlignment = Alignment.Center
@@ -86,10 +98,25 @@ fun SpecialKeyButton(text: String, onClick: () -> Unit) {
     }
 }
 
-@Preview(showBackground = true)
+//Check if the letter from the keyboard was used and the state of that guess
 @Composable
-fun WordleKeyboardPreview() {
-    MaterialTheme {
-        WordleKeyboard(onKeyPress = {}, onEnter = {}, onDelete = {})
+fun getColour(solution: String, guesses: List<String>, char: String, currentRow: Int): Color {
+    if (currentRow == 0) return MaterialTheme.colorScheme.onSurface
+
+    val guessesCopy = guesses.subList(0, currentRow)
+
+    for (guess in guessesCopy) {
+        if (guess.contains(char)) {
+            return if (solution.contains(char)) {
+                if (solution.indexOf(char) == guess.indexOf(char)) {
+                    MaterialTheme.colorScheme.primary
+                } else {
+                    MaterialTheme.colorScheme.secondary
+                }
+            } else {
+                MaterialTheme.colorScheme.tertiary
+            }
+        }
     }
+    return MaterialTheme.colorScheme.onSurface
 }
