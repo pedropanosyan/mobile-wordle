@@ -32,9 +32,20 @@ fun GameScreen (
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        WordleGrid()
+        WordleGrid(
+            guesses = viewModel.guesses,
+            solution = viewModel.solution,
+            currentRow = viewModel.currentRow
+        )
         if (viewModel.result.isEmpty()) {
-            WordleKeyboard()
+            WordleKeyboard(
+                solution = viewModel.solution,
+                guesses = viewModel.guesses,
+                currentRow = viewModel.currentRow,
+                onEnterPress = { viewModel.submitWord() },
+                onDeletePress = { viewModel.deleteLetter() },
+                onKeyPress = { option -> viewModel.enterLetter(option) }
+            )
         }
         if (viewModel.result.isNotEmpty()) {
             if (viewModel.hasWon()) {

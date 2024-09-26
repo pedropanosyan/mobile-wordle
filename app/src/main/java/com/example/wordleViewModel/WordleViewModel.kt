@@ -42,11 +42,6 @@ class WordleViewModel @Inject constructor(
     var currentRow by mutableIntStateOf(0)
     var result by mutableStateOf("")
     private var wordSet by mutableStateOf<Set<String>>(emptySet())
-    val keyboardRows = listOf(
-        "QWERTYUIO",
-        "PASDFGHJK",
-        "ZXCVBNÑML"
-    )
 
     private val context: Context
         get() = getApplication<Application>().applicationContext
@@ -140,34 +135,6 @@ class WordleViewModel @Inject constructor(
         return result == "won"
     }
 
-    fun getBoxColor(
-        char: String,
-        colIndex: Int,
-        rowIndex: Int,
-        paintedCounts: MutableMap<Char, Int>
-    ): BoxColor {
-        val solutionCharCounts = solution.groupingBy { it }.eachCount()
-        return when {
-            rowIndex >= currentRow -> BoxColor.OUTLINE
-            char.isNotEmpty() && solution[colIndex] == char.first() -> {
-                paintedCounts[char[0]] = (paintedCounts[char[0]] ?: 0) + 1
-                BoxColor.PRIMARY
-            }
-            char.isNotEmpty() && solution.contains(char.first()) -> {
-                val currentChar = char[0]
-                val solutionCount = solutionCharCounts[currentChar] ?: 0
-                val paintedCount = paintedCounts[currentChar] ?: 0
-
-                if (paintedCount < solutionCount) {
-                    paintedCounts[currentChar] = paintedCount + 1
-                    BoxColor.SECONDARY
-                } else {
-                    BoxColor.TERTIARY
-                }
-            }
-            else -> BoxColor.TERTIARY
-        }
-    }
 
     private fun readWordsFromFile(fileName: String): Set<String> {
         val wordsSet = mutableSetOf<String>()

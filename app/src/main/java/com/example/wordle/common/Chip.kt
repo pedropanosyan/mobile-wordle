@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -34,4 +35,10 @@ fun Chip(label: String, value: String, color: Color = MaterialTheme.colorScheme.
             style = MaterialTheme.typography.bodyMedium.copy(color = color)
         )
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ChipPreview() {
+    Chip(label = "Score", value = "85", color = Color(0xFF6200EA))
 }
