@@ -11,16 +11,14 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.io.BufferedReader
 import java.io.InputStreamReader
-import java.net.HttpURLConnection
-import java.net.URI
-import java.net.URL
 import java.text.Normalizer
 import javax.inject.Inject
 import androidx.lifecycle.AndroidViewModel
 import com.example.wordle.apiManager.ApiServiceImpl
+import com.example.wordle.data.Game
+import com.example.wordle.data.WordleDatabase
 
 enum class BoxColor {
     OUTLINE,
@@ -32,9 +30,9 @@ enum class BoxColor {
 @HiltViewModel
 class WordleViewModel @Inject constructor(
     application: Application,
-    private val apiServiceImpl: ApiServiceImpl
+    private val apiServiceImpl: ApiServiceImpl,
 ) : AndroidViewModel(application) {
-
+    private var startTime = 0L
     var solution by mutableStateOf("")
     var isPlaying by mutableStateOf(false)
     var guesses by mutableStateOf(createInitialGuessesList())
@@ -46,9 +44,19 @@ class WordleViewModel @Inject constructor(
     private val context: Context
         get() = getApplication<Application>().applicationContext
 
+    private val gamesDao = WordleDatabase.getDatabase(context).gamesDao()
+
     init {
         loadWordsFromFile("diccionario_espanol.txt")
     }
+
+    fun addGame(hasWon: Boolean, timePlayed: Int) {
+        val newGame = Game(hasWon = hasWon, timePlayed = timePlayed)
+        viewModelScope.launch(Dispatchers.IO) {
+            gamesDao.insert(newGame)
+        }
+    }
+
 
     private fun loadWordsFromFile(fileName: String) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -64,6 +72,7 @@ class WordleViewModel @Inject constructor(
                 solution = normalizeWord(word)
                 Log.d("WordleViewModel", "API Success: Fetched word: $word")
                 isPlaying = true
+                startTime = System.currentTimeMillis()
             },
             onFail = {
                 Log.d("WordleViewModel", "API Failure: Failed to fetch word")
@@ -111,8 +120,14 @@ class WordleViewModel @Inject constructor(
         if (currentColumn == 5) {
             if (wordSet.isEmpty()) return
             if (!wordExists(wordSet, guesses[currentRow])) return
-            if (checkIfGuessIsCorrect(guesses[currentRow], solution)) result = "won"
-            if (currentRow == 5) result = "lost"
+            if (checkIfGuessIsCorrect(guesses[currentRow], solution)) {
+                result = "won"
+                addGame(true, ((System.currentTimeMillis() - startTime) / 1000).toInt())
+            }
+            if (currentRow == 5) {
+                result = "lost"
+                addGame(false, ((System.currentTimeMillis() - startTime) / 1000).toInt())
+            }
             currentRow++
             currentColumn = 0
         }

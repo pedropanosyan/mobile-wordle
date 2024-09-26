@@ -3,7 +3,6 @@ package com.example.wordle.screens
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,25 +16,49 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.wordle.common.Chip
+import com.example.wordleViewModel.StatsViewModel
 
 data class ChipData(val label: String, val value: String, val color: Color? = null)
 
 @Composable
 fun ProfileScreen(
     modifier: Modifier = Modifier,
-    onNavigateToGame: () -> Unit
+    onNavigateToGame: () -> Unit,
 ) {
+    val viewModel = hiltViewModel<StatsViewModel>()
+    val totalGamesPlayed = viewModel.totalGamesPlayed.collectAsState(initial = 0)
+    val totalWins = viewModel.totalWins.collectAsState(initial = 0)
+    val totalLosses = viewModel.totalLosses.collectAsState(initial = 0)
+    val bestWinningTime = viewModel.bestWinningTime.collectAsState(initial = 0)
+    val worstWinningTime = viewModel.worstWinningTime.collectAsState(initial = 0)
+    val averageMatchTime = viewModel.averageMatchTime.collectAsState(initial = 0)
+    val totalPlayTime = viewModel.totalPlayTime.collectAsState(initial = 0)
+
     val chips = listOf(
-        ChipData(label = "Total Games Played", value = "78"),
-        ChipData(label = "Total Wins", value = "45", color = MaterialTheme.colorScheme.primary),
-        ChipData(label = "Total Losses", value = "33", color = MaterialTheme.colorScheme.error)
+        ChipData(
+            label = "Total Games",
+            value = totalGamesPlayed.value.toString(),
+            color = MaterialTheme.colorScheme.secondary
+        ),
+        ChipData(
+            label = "Total Wins",
+            value = totalWins.value.toString(),
+            color = MaterialTheme.colorScheme.primary
+        ),
+        ChipData(
+            label = "Total Losses",
+            value = totalLosses.value.toString(),
+            color = MaterialTheme.colorScheme.error
+        )
     )
 
     LazyColumn(

@@ -5,4 +5,6 @@
     <string name="the_word_was">La palabra era: %1$s</string>
     <string name="play_again">Play again</string>
     <string name="quit_game">Quit Game</string>
+    <string name="enter">Enter</string>
+    <string name="delete">Delete</string>
 </resources>

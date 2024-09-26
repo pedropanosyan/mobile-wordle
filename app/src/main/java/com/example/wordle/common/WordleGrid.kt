@@ -136,7 +136,7 @@ fun WordleGridPreview() {
     WordleGrid(
         guesses = listOf("HELLO", "WORLD", "OTHER"),
         solution = "OTHER",
-        currentRow = 3
+        currentRow = 2
     )
 }
 
