@@ -1,6 +1,7 @@
 package com.example.wordleViewModel
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asFlow
 import com.example.wordle.data.GamesDao
@@ -18,6 +19,7 @@ class StatsViewModel @Inject constructor(
 
     private val gamesDao: GamesDao = database.gamesDao()
 
+    val getAllGames = gamesDao.getAllGames().asFlow()
     val totalGamesPlayed = gamesDao.getTotalGamesPlayed().asFlow()
     val totalWins = gamesDao.getTotalWins().asFlow()
     val totalLosses = gamesDao.getTotalLosses().asFlow()

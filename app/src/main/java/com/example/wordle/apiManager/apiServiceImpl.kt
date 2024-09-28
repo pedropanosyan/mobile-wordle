@@ -1,7 +1,6 @@
 package com.example.wordle.apiManager
 
 import android.content.Context
-import android.util.Log
 import android.widget.Toast
 import com.example.wordle.R
 import retrofit.Call
@@ -31,17 +30,14 @@ class ApiServiceImpl @Inject constructor() {
                     if (!words.isNullOrEmpty()) {
                         onSuccess(words[0])
                     } else {
-                        Log.d("ApiServiceImpl", "Response body is null or empty")
                         onFail()
                     }
                 } else {
-                    Log.d("ApiServiceImpl", "Request failed with code: ${response?.code()}")
                     onFail()
                 }
             }
 
             override fun onFailure(t: Throwable?) {
-                Log.e("ApiServiceImpl", "API call failed: ${t?.message}")
                 Toast.makeText(context, "Failed to fetch word", Toast.LENGTH_SHORT).show()
                 onFail()
                 loadingFinished()

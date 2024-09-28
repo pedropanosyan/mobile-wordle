@@ -1,5 +1,6 @@
 package com.example.wordle.screens
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,6 +17,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.wordle.common.Chip
+import com.example.wordle.data.Game
 import com.example.wordleViewModel.StatsViewModel
 
 data class ChipData(val label: String, val value: String, val color: Color? = null)
@@ -35,6 +38,7 @@ fun ProfileScreen(
     onNavigateToGame: () -> Unit,
 ) {
     val viewModel = hiltViewModel<StatsViewModel>()
+    val allGames = viewModel.getAllGames.collectAsState(initial = emptyList())
     val totalGamesPlayed = viewModel.totalGamesPlayed.collectAsState(initial = 0)
     val totalWins = viewModel.totalWins.collectAsState(initial = 0)
     val totalLosses = viewModel.totalLosses.collectAsState(initial = 0)
@@ -111,15 +115,16 @@ fun ProfileScreen(
             Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                 Chip(
                     label = "Best winning time",
-                    value = "3:45",
+                    value = formatTime(bestWinningTime.value),
                     color = MaterialTheme.colorScheme.primary
                 )
                 Chip(
                     label = "Worst winning time",
-                    value = "2:30",
+                    value = formatTime(worstWinningTime.value),
                     color = MaterialTheme.colorScheme.error
                 )
             }
+
         }
         item {
             Text(
@@ -134,12 +139,12 @@ fun ProfileScreen(
             Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                 Chip(
                     label = "Best strike ✅",
-                    value = "5",
+                    value = getBestStrike(games = allGames),
                     color = MaterialTheme.colorScheme.primary
                 )
                 Chip(
                     label = "Worst strike ❌",
-                    value = "2",
+                    value = getWorstStrike(games = allGames),
                     color = MaterialTheme.colorScheme.error
                 )
             }
@@ -158,10 +163,10 @@ fun ProfileScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(80.dp)
-                    .background(MaterialTheme.colorScheme.primary, RoundedCornerShape(16.dp))
+                    .background(getLastGameColor(games = allGames.value), RoundedCornerShape(16.dp))
             ) {
                 Text(
-                    text = "3" + "\uD83D\uDD25",
+                    text = getCurrentStrike(games = allGames).toString() + getLastGameIcon(games = allGames.value),
                     style = MaterialTheme.typography.headlineLarge.copy(
                         fontWeight = FontWeight.Bold,
                         fontSize = 48.sp,
@@ -184,15 +189,98 @@ fun ProfileScreen(
             Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                 Chip(
                     label = "Total time played",
-                    value = "5",
+                    value = formatTime(totalPlayTime.value),
                     color = MaterialTheme.colorScheme.tertiary
                 )
                 Chip(
                     label = "Average match time",
-                    value = "2",
+                    value = formatTime(averageMatchTime.value),
                     color = MaterialTheme.colorScheme.tertiary
                 )
             }
         }
+    }
+}
+
+fun formatTime(seconds: Int): String {
+    val minutes = seconds / 60
+    val remainingSeconds = seconds % 60
+    return String.format("%02d:%02d", minutes, remainingSeconds)
+}
+
+fun getBestStrike(games: State<List<Game>>): String {
+    var max = 0
+    var current = 0
+
+    games.value.forEach { game ->
+        if (game.hasWon) {
+            current++
+            if (current > max) {
+                max = current
+            }
+        } else {
+            current = 0
+        }
+    }
+    return max.toString()
+}
+
+fun getWorstStrike(games: State<List<Game>>): String {
+    var max = 0
+    var current = 0
+
+    games.value.forEach { game ->
+        if (!game.hasWon) {
+            current++
+            if (current > max) {
+                max = current
+            }
+        } else {
+            current = 0
+        }
+    }
+    return max.toString()
+}
+
+fun getCurrentStrike(games: State<List<Game>>): Int {
+    val reversedGames = games.value.toMutableList().reversed()
+
+    if (reversedGames.isEmpty()) return 0
+
+    var current = 0
+    val resultToCompare = reversedGames.first().hasWon
+    reversedGames.forEach { game ->
+        if (game.hasWon == resultToCompare) {
+            current++
+        } else {
+            return current
+        }
+    }
+
+    return current
+}
+
+@Composable
+fun getLastGameColor(games: List<Game>): Color {
+    if (games.isEmpty()) {
+        return MaterialTheme.colorScheme.tertiary
+    }
+
+    return if (!games.last().hasWon) {
+        MaterialTheme.colorScheme.error
+    } else {
+        MaterialTheme.colorScheme.primary
+    }
+}
+
+fun getLastGameIcon(games: List<Game>): String {
+    if (games.isEmpty()) {
+        return "❔"
+    }
+
+    return if (!games.last().hasWon) {
+        "\uD83D\uDD3B"
+    } else {
+        "\uD83D\uDD25"
     }
 }
