@@ -7,4 +7,20 @@
     <string name="quit_game">Quit Game</string>
     <string name="enter">Enter</string>
     <string name="delete">Delete</string>
+
+    <string name="total_games">Total Games</string>
+    <string name="total_wins">Total Wins</string>
+    <string name="total_losses">Total Losses</string>
+    <string name="profile">Profile Screen</string>
+    <string name="performance">Overall Performance</string>
+    <string name="time_scores">Time Scores</string>
+    <string name="best_winning_time">Best winning time</string>
+    <string name="worst_winning_time">Worst winning time</string>
+    <string name="strike_scores">Strike scores</string>
+    <string name="best_strike_score">Best strike ✅</string>
+    <string name="worst_strike_score">Worst strike ❌</string>
+    <string name="current_strike_score">Current strike</string>
+    <string name="extra_stats">Extra stats</string>
+    <string name="total_time_played">Total time played</string>
+    <string name="average_match_time">Average match time</string>
 </resources>

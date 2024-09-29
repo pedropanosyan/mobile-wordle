@@ -22,10 +22,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.wordle.R
 import com.example.wordle.common.Chip
 import com.example.wordle.data.Game
 import com.example.wordleViewModel.StatsViewModel
@@ -49,17 +51,17 @@ fun ProfileScreen(
 
     val chips = listOf(
         ChipData(
-            label = "Total Games",
+            label = stringResource(id = R.string.total_games),
             value = totalGamesPlayed.value.toString(),
             color = MaterialTheme.colorScheme.secondary
         ),
         ChipData(
-            label = "Total Wins",
+            label = stringResource(id = R.string.total_wins),
             value = totalWins.value.toString(),
             color = MaterialTheme.colorScheme.primary
         ),
         ChipData(
-            label = "Total Losses",
+            label = stringResource(id = R.string.total_losses),
             value = totalLosses.value.toString(),
             color = MaterialTheme.colorScheme.error
         )
@@ -74,7 +76,7 @@ fun ProfileScreen(
     ) {
         item {
             Text(
-                text = "Profile Screen",
+                text = stringResource(id = R.string.profile),
                 style = MaterialTheme.typography.headlineLarge.copy(
                     fontWeight = FontWeight.Bold,
                     fontSize = 32.sp
@@ -86,7 +88,7 @@ fun ProfileScreen(
         }
         item {
             Text(
-                text = "Overall Performance",
+                text = stringResource(id = R.string.performance),
                 style = MaterialTheme.typography.headlineLarge.copy(
                     fontWeight = FontWeight.Bold,
                     fontSize = 24.sp
@@ -104,7 +106,7 @@ fun ProfileScreen(
         }
         item {
             Text(
-                text = "Time Scores",
+                text = stringResource(id = R.string.time_scores),
                 style = MaterialTheme.typography.headlineLarge.copy(
                     fontWeight = FontWeight.Bold,
                     fontSize = 24.sp
@@ -114,12 +116,12 @@ fun ProfileScreen(
         item {
             Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                 Chip(
-                    label = "Best winning time",
+                    label = stringResource(id = R.string.best_winning_time),
                     value = formatTime(bestWinningTime.value),
                     color = MaterialTheme.colorScheme.primary
                 )
                 Chip(
-                    label = "Worst winning time",
+                    label = stringResource(id = R.string.worst_winning_time),
                     value = formatTime(worstWinningTime.value),
                     color = MaterialTheme.colorScheme.error
                 )
@@ -128,7 +130,7 @@ fun ProfileScreen(
         }
         item {
             Text(
-                text = "Strike Scores",
+                text = stringResource(id = R.string.strike_scores),
                 style = MaterialTheme.typography.headlineLarge.copy(
                     fontWeight = FontWeight.Bold,
                     fontSize = 24.sp
@@ -138,12 +140,12 @@ fun ProfileScreen(
         item {
             Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                 Chip(
-                    label = "Best strike ✅",
+                    label = stringResource(id = R.string.best_strike_score),
                     value = getBestStrike(games = allGames),
                     color = MaterialTheme.colorScheme.primary
                 )
                 Chip(
-                    label = "Worst strike ❌",
+                    label = stringResource(id = R.string.worst_strike_score),
                     value = getWorstStrike(games = allGames),
                     color = MaterialTheme.colorScheme.error
                 )
@@ -151,7 +153,7 @@ fun ProfileScreen(
         }
         item {
             Text(
-                text = "Current Strike",
+                text = stringResource(id = R.string.current_strike_score),
                 style = MaterialTheme.typography.headlineLarge.copy(
                     fontWeight = FontWeight.Bold,
                     fontSize = 24.sp
@@ -178,7 +180,7 @@ fun ProfileScreen(
         }
         item {
             Text(
-                text = "Extra stats",
+                text = stringResource(id = R.string.extra_stats),
                 style = MaterialTheme.typography.headlineLarge.copy(
                     fontWeight = FontWeight.Bold,
                     fontSize = 24.sp
@@ -188,12 +190,12 @@ fun ProfileScreen(
         item {
             Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                 Chip(
-                    label = "Total time played",
+                    label = stringResource(id = R.string.total_time_played),
                     value = formatTime(totalPlayTime.value),
                     color = MaterialTheme.colorScheme.tertiary
                 )
                 Chip(
-                    label = "Average match time",
+                    label = stringResource(id = R.string.average_match_time),
                     value = formatTime(averageMatchTime.value),
                     color = MaterialTheme.colorScheme.tertiary
                 )
