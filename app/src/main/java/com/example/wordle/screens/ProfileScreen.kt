@@ -1,6 +1,5 @@
 package com.example.wordle.screens
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,52 +16,48 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.wordle.R
 import com.example.wordle.common.Chip
 import com.example.wordle.data.Game
-import com.example.wordleViewModel.StatsViewModel
+import kotlinx.coroutines.flow.Flow
 
 data class ChipData(val label: String, val value: String, val color: Color? = null)
 
 @Composable
 fun ProfileScreen(
     modifier: Modifier = Modifier,
+    totalGamesPlayed: Int,
+    totalWins: Int,
+    totalLosses: Int,
+    bestWinningTime: Int,
+    worstWinningTime: Int,
+    averageMatchTime: Int,
+    totalPlayTime: Int,
+    allGames: List<Game>,
     onNavigateToGame: () -> Unit,
 ) {
-    val viewModel = hiltViewModel<StatsViewModel>()
-    val allGames = viewModel.getAllGames.collectAsState(initial = emptyList())
-    val totalGamesPlayed = viewModel.totalGamesPlayed.collectAsState(initial = 0)
-    val totalWins = viewModel.totalWins.collectAsState(initial = 0)
-    val totalLosses = viewModel.totalLosses.collectAsState(initial = 0)
-    val bestWinningTime = viewModel.bestWinningTime.collectAsState(initial = 0)
-    val worstWinningTime = viewModel.worstWinningTime.collectAsState(initial = 0)
-    val averageMatchTime = viewModel.averageMatchTime.collectAsState(initial = 0)
-    val totalPlayTime = viewModel.totalPlayTime.collectAsState(initial = 0)
-
     val chips = listOf(
         ChipData(
             label = stringResource(id = R.string.total_games),
-            value = totalGamesPlayed.value.toString(),
+            value = totalGamesPlayed.toString(),
             color = MaterialTheme.colorScheme.secondary
         ),
         ChipData(
             label = stringResource(id = R.string.total_wins),
-            value = totalWins.value.toString(),
+            value = totalWins.toString(),
             color = MaterialTheme.colorScheme.primary
         ),
         ChipData(
             label = stringResource(id = R.string.total_losses),
-            value = totalLosses.value.toString(),
+            value = totalLosses.toString(),
             color = MaterialTheme.colorScheme.error
         )
     )
@@ -117,16 +112,15 @@ fun ProfileScreen(
             Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                 Chip(
                     label = stringResource(id = R.string.best_winning_time),
-                    value = formatTime(bestWinningTime.value),
+                    value = formatTime(bestWinningTime),
                     color = MaterialTheme.colorScheme.primary
                 )
                 Chip(
                     label = stringResource(id = R.string.worst_winning_time),
-                    value = formatTime(worstWinningTime.value),
+                    value = formatTime(worstWinningTime),
                     color = MaterialTheme.colorScheme.error
                 )
             }
-
         }
         item {
             Text(
@@ -165,10 +159,10 @@ fun ProfileScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(80.dp)
-                    .background(getLastGameColor(games = allGames.value), RoundedCornerShape(16.dp))
+                    .background(getLastGameColor(games = allGames), RoundedCornerShape(16.dp))
             ) {
                 Text(
-                    text = getCurrentStrike(games = allGames).toString() + getLastGameIcon(games = allGames.value),
+                    text = getCurrentStrike(games = allGames).toString() + getLastGameIcon(games = allGames),
                     style = MaterialTheme.typography.headlineLarge.copy(
                         fontWeight = FontWeight.Bold,
                         fontSize = 48.sp,
@@ -191,12 +185,12 @@ fun ProfileScreen(
             Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                 Chip(
                     label = stringResource(id = R.string.total_time_played),
-                    value = formatTime(totalPlayTime.value),
+                    value = formatTime(totalPlayTime),
                     color = MaterialTheme.colorScheme.tertiary
                 )
                 Chip(
                     label = stringResource(id = R.string.average_match_time),
-                    value = formatTime(averageMatchTime.value),
+                    value = formatTime(averageMatchTime),
                     color = MaterialTheme.colorScheme.tertiary
                 )
             }
@@ -204,17 +198,18 @@ fun ProfileScreen(
     }
 }
 
+
 fun formatTime(seconds: Int): String {
     val minutes = seconds / 60
     val remainingSeconds = seconds % 60
     return String.format("%02d:%02d", minutes, remainingSeconds)
 }
 
-fun getBestStrike(games: State<List<Game>>): String {
+fun getBestStrike(games: List<Game>): String {
     var max = 0
     var current = 0
 
-    games.value.forEach { game ->
+    games.forEach { game ->
         if (game.hasWon) {
             current++
             if (current > max) {
@@ -227,11 +222,11 @@ fun getBestStrike(games: State<List<Game>>): String {
     return max.toString()
 }
 
-fun getWorstStrike(games: State<List<Game>>): String {
+fun getWorstStrike(games: List<Game>): String {
     var max = 0
     var current = 0
 
-    games.value.forEach { game ->
+    games.forEach { game ->
         if (!game.hasWon) {
             current++
             if (current > max) {
@@ -244,8 +239,8 @@ fun getWorstStrike(games: State<List<Game>>): String {
     return max.toString()
 }
 
-fun getCurrentStrike(games: State<List<Game>>): Int {
-    val reversedGames = games.value.toMutableList().reversed()
+fun getCurrentStrike(games: List<Game>): Int {
+    val reversedGames = games.toMutableList().reversed()
 
     if (reversedGames.isEmpty()) return 0
 
@@ -285,4 +280,28 @@ fun getLastGameIcon(games: List<Game>): String {
     } else {
         "\uD83D\uDD25"
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ProfileScreenPreview() {
+    ProfileScreen(
+        totalGamesPlayed = 50,
+        totalWins = 30,
+        totalLosses = 20,
+        bestWinningTime = 120,
+        worstWinningTime = 300,
+        averageMatchTime = 180,
+        totalPlayTime = 9000,
+        allGames = sampleGames(),
+        onNavigateToGame = {}
+    )
+}
+
+fun sampleGames(): List<Game> {
+    return listOf(
+        Game(id = 1, hasWon = true, timePlayed = 120),
+        Game(id = 2, hasWon = false, timePlayed = 300),
+        Game(id = 3, hasWon = true, timePlayed = 150)
+    )
 }
