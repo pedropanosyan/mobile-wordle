@@ -70,7 +70,7 @@ fun GameScreen (
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             if (viewModel.result.isNotEmpty()) {
-                Button(onClick = { viewModel.playGame() }) {
+                Button(onClick = { viewModel.playGame("Rematch") }) {
                     Text(
                         text = stringResource(id = R.string.play_again),
                         style = MaterialTheme.typography.bodyMedium,

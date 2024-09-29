@@ -8,12 +8,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.wordle.common.DifficultySelector
 import com.example.wordle.common.GameScreen
-import com.example.wordle.ui.theme.WordleTheme
 import com.example.wordleViewModel.WordleViewModel
 
 
@@ -23,6 +22,7 @@ fun WordleScreen(
     onNavigateToGame: () -> Unit
 ) {
 
+    var selectedDifficulty by remember { mutableStateOf("Medium") }
     val viewModel = hiltViewModel<WordleViewModel>()
 
     Column(
@@ -43,7 +43,16 @@ fun WordleScreen(
         if (viewModel.isPlaying) {
             GameScreen()
         } else {
-            Button(onClick = { viewModel.playGame() }) {
+            Column {
+                DifficultySelector(
+                    selectedDifficulty = selectedDifficulty,
+                    onDifficultySelected = { difficulty ->
+                        selectedDifficulty = difficulty
+                    }
+                )
+            }
+
+            Button(onClick = { viewModel.playGame(selectedDifficulty) }) {
                 Text(
                     text = "Start Game",
                     style = MaterialTheme.typography.bodyMedium

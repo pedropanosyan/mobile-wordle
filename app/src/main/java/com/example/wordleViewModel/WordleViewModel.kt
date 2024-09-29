@@ -35,7 +35,7 @@ class WordleViewModel @Inject constructor(
     private var startTime = 0L
     var solution by mutableStateOf("")
     var isPlaying by mutableStateOf(false)
-    var guesses by mutableStateOf(createInitialGuessesList())
+    var guesses by mutableStateOf(emptyList<String>())
     var currentColumn by mutableIntStateOf(0)
     var currentRow by mutableIntStateOf(0)
     var result by mutableStateOf("")
@@ -89,8 +89,9 @@ class WordleViewModel @Inject constructor(
             .uppercase()
     }
 
-    fun playGame() {
-        guesses = createInitialGuessesList()
+    fun playGame(mode: String) {
+        val size = getSizeFromMode(mode, guesses.size)
+        guesses = createInitialGuessesList(size)
         currentRow = 0
         currentColumn = 0
         result = ""
@@ -100,7 +101,6 @@ class WordleViewModel @Inject constructor(
 
     fun quitGame() {
         isPlaying = false
-        guesses = createInitialGuessesList()
         currentRow = 0
         currentColumn = 0
         result = ""
@@ -119,14 +119,12 @@ class WordleViewModel @Inject constructor(
     fun submitWord() {
         if (currentColumn == 5) {
             if (wordSet.isEmpty()) return
-            if (!wordExists(wordSet, guesses[currentRow])) return
+            if (!wordExists(wordSet, guesses[currentRow], solution)) return
             if (checkIfGuessIsCorrect(guesses[currentRow], solution)) {
-                Log.i("WordleViewModel", "Correct guess")
                 result = "won"
                 addGame(true, ((System.currentTimeMillis() - startTime) / 1000).toInt())
             }
             if (currentRow == 5) {
-                Log.i("WordleViewModel", "Lost game")
                 result = "lost"
                 addGame(false, ((System.currentTimeMillis() - startTime) / 1000).toInt())
             }
@@ -164,20 +162,18 @@ class WordleViewModel @Inject constructor(
                 }
             }
         }
-        //also add the solution as a word
-        wordsSet.add(normalize(solution))
         return wordsSet
     }
 
 
 }
 
-private fun createInitialGuessesList(): List<String> {
-    return MutableList(6) { "" }
+private fun createInitialGuessesList(size: Int): List<String> {
+    return MutableList(size) { "" }
 }
 
-private fun wordExists(wordsSet: Set<String>, word: String): Boolean {
-    return wordsSet.contains(normalize(word))
+private fun wordExists(wordsSet: Set<String>, word: String, solution: String): Boolean {
+    return wordsSet.contains(normalize(word)) || word.lowercase() == solution.lowercase()
 }
 
 fun checkIfGuessIsCorrect(guess: String, solution: String): Boolean {
@@ -188,4 +184,15 @@ fun normalize(word: String): String {
     return Normalizer.normalize(word, Normalizer.Form.NFD)
         .replace("\\p{InCombiningDiacriticalMarks}+".toRegex(), "")
         .uppercase()
+}
+
+fun getSizeFromMode(mode: String, previous: Int): Int {
+    return when (mode) {
+        "Easy" -> 8
+        "Medium" -> 6
+        "Hard" -> 5
+        "Expert" -> 3
+        "Rematch" -> previous
+        else -> 6
+    }
 }
