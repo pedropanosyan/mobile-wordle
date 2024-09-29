@@ -32,7 +32,6 @@ fun NavHostComposable(innerPadding: PaddingValues, navController: NavHostControl
                 onNavigateToGame = { navController.navigate(WordleScreen.Home.name) },
                 modifier = Modifier
                     .fillMaxSize(),
-                isPlaying = false
             )
         }
         composable(route = WordleScreen.Stats.name) {
