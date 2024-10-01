@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -37,13 +38,13 @@ fun WordleKeyboard(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+            .padding(dimensionResource(id = R.dimen.lg)),
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.md)),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         for (row in keyboardRows) {
             Row(
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.sm)),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 for (option in row) {
@@ -58,11 +59,11 @@ fun WordleKeyboard(
             }
         }
         Row(
-            horizontalArrangement = Arrangement.spacedBy(4.dp),
+            horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.sm)),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             SpecialKeyButton(text = stringResource(id = R.string.enter), onClick = { onEnterPress() })
-            Spacer(modifier = Modifier.width(4.dp))
+            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.sm)))
             SpecialKeyButton(text = stringResource(id = R.string.delete), onClick = { onDeletePress() })
         }
     }
@@ -75,9 +76,9 @@ fun KeyButton(option: String, onKeyPress: (option: String) -> Unit, solution: St
 
     Box(
         modifier = Modifier
-            .size(28.dp)
-            .background(keyColor, RoundedCornerShape(4.dp))
-            .padding(2.dp)
+            .size(dimensionResource(id = R.dimen.xxl))
+            .background(keyColor, RoundedCornerShape(dimensionResource(id = R.dimen.sm)))
+            .padding(dimensionResource(id = R.dimen.sm))
             .clickable { onKeyPress(option) },
         contentAlignment = Alignment.Center
     ) {
@@ -95,7 +96,7 @@ fun SpecialKeyButton(text: String, onClick: () -> Unit) {
         modifier = Modifier
             .size(56.dp, 28.dp)
             .background(MaterialTheme.colorScheme.onSurface, RoundedCornerShape(4.dp))
-            .padding(2.dp)
+            .padding(dimensionResource(id = R.dimen.sm))
             .clickable { onClick() },
         contentAlignment = Alignment.Center
     ) {

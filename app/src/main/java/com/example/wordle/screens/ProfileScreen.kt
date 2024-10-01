@@ -19,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -65,9 +66,9 @@ fun ProfileScreen(
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(dimensionResource(id = R.dimen.lg)),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.lg))
     ) {
         item {
             Text(
@@ -79,7 +80,7 @@ fun ProfileScreen(
             )
         }
         item {
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.md)))
         }
         item {
             Text(
@@ -92,7 +93,7 @@ fun ProfileScreen(
         }
         item {
             LazyRow(
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.md))
             ) {
                 items(chips) { chip ->
                     Chip(label = chip.label, value = chip.value, color = chip.color ?: MaterialTheme.colorScheme.tertiary)
@@ -109,7 +110,7 @@ fun ProfileScreen(
             )
         }
         item {
-            Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+            Row(horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.lg))) {
                 Chip(
                     label = stringResource(id = R.string.best_winning_time),
                     value = formatTime(bestWinningTime),
@@ -132,7 +133,7 @@ fun ProfileScreen(
             )
         }
         item {
-            Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+            Row(horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.lg))) {
                 Chip(
                     label = stringResource(id = R.string.best_strike_score),
                     value = getBestStrike(games = allGames),
@@ -159,7 +160,7 @@ fun ProfileScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(80.dp)
-                    .background(getLastGameColor(games = allGames), RoundedCornerShape(16.dp))
+                    .background(getLastGameColor(games = allGames), RoundedCornerShape(dimensionResource(id = R.dimen.lg)))
             ) {
                 Text(
                     text = getCurrentStrike(games = allGames).toString() + getLastGameIcon(games = allGames),
@@ -182,7 +183,7 @@ fun ProfileScreen(
             )
         }
         item {
-            Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+            Row(horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.lg))) {
                 Chip(
                     label = stringResource(id = R.string.total_time_played),
                     value = formatTime(totalPlayTime),

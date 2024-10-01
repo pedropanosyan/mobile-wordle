@@ -7,11 +7,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.wordle.R
 import com.example.wordle.screens.ProfileScreen
 import com.example.wordle.screens.WordleScreen
 import com.example.wordleViewModel.StatsViewModel
@@ -25,7 +27,7 @@ fun NavHostComposable(innerPadding: PaddingValues, navController: NavHostControl
         modifier = Modifier
             .fillMaxSize()
             .padding(innerPadding)
-            .padding(horizontal = 10.dp)
+            .padding(horizontal = dimensionResource(id = R.dimen.md2))
     ) {
         composable(route = WordleScreen.Home.name) {
             WordleScreen(

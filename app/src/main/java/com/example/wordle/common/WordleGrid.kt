@@ -16,12 +16,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.wordleViewModel.BoxColor
-import com.example.wordleViewModel.WordleViewModel
 import kotlinx.coroutines.delay
+import com.example.wordle.R
 
 @Composable
 fun WordleGrid(
@@ -32,13 +32,13 @@ fun WordleGrid(
 
     Column(
         modifier = Modifier
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+            .padding(dimensionResource(id = R.dimen.lg)),
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.md))
     ) {
         for ((rowIndex, guess) in guesses.withIndex()) {
             val paintedCounts = mutableMapOf<Char, Int>()
             Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.md))
             ) {
                 for (index in 0 until 5) {
                     val char = if (index < guess.length) guess[index] else ' '
@@ -119,8 +119,8 @@ fun LetterBox(char: Char, backgroundColor: Color, delayMs: Long) {
 
     Box(
         modifier = Modifier
-            .size(48.dp)
-            .background(animatedBackgroundColor, RoundedCornerShape(8.dp)),
+            .size(dimensionResource(id = R.dimen.xxxl))
+            .background(animatedBackgroundColor, RoundedCornerShape(dimensionResource(id = R.dimen.md))),
         contentAlignment = Alignment.Center
     ) {
         Text(

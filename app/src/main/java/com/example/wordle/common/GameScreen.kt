@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -28,7 +29,7 @@ fun GameScreen (
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(4.dp),
+            .padding(dimensionResource(id = R.dimen.sm)),
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -67,7 +68,7 @@ fun GameScreen (
             }
         }
         Row (
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
+            horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.lg))
         ) {
             if (viewModel.result.isNotEmpty()) {
                 Button(onClick = { viewModel.playGame("Rematch") }) {
