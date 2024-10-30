@@ -1,7 +1,8 @@
 package com.example.wordle.common
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -13,82 +14,90 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.wordle.R
 import com.example.wordleViewModel.WordleViewModel
 
 
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.ui.platform.LocalContext
+
 @Composable
-fun GameScreen (
+fun GameScreen(
     modifier: Modifier = Modifier
 ) {
-
+    val context = LocalContext.current
     val viewModel = hiltViewModel<WordleViewModel>()
 
-    Column(
+    LazyColumn(
         modifier = modifier
             .fillMaxSize()
             .padding(dimensionResource(id = R.dimen.sm)),
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        WordleGrid(
-            guesses = viewModel.guesses,
-            solution = viewModel.solution,
-            currentRow = viewModel.currentRow
-        )
-        if (viewModel.result.isEmpty()) {
-            WordleKeyboard(
-                solution = viewModel.solution,
+        item {
+            WordleGrid(
                 guesses = viewModel.guesses,
-                currentRow = viewModel.currentRow,
-                onEnterPress = { viewModel.submitWord() },
-                onDeletePress = { viewModel.deleteLetter() },
-                onKeyPress = { option -> viewModel.enterLetter(option) }
+                solution = viewModel.solution,
+                currentRow = viewModel.currentRow
             )
         }
-        if (viewModel.result.isNotEmpty()) {
-            if (viewModel.hasWon()) {
-                Text(
-                    text = stringResource(id = R.string.congratulations_you_won),
-                    style = MaterialTheme.typography.headlineMedium
+        item {
+            if (viewModel.result.isEmpty()) {
+                WordleKeyboard(
+                    solution = viewModel.solution,
+                    guesses = viewModel.guesses,
+                    currentRow = viewModel.currentRow,
+                    onEnterPress = { viewModel.submitWord() },
+                    onDeletePress = { viewModel.deleteLetter() },
+                    onKeyPress = { option -> viewModel.enterLetter(option) }
                 )
-            } else {
-                Column {
-                    Text(
-                        text = stringResource(id = R.string.you_lost),
-                        style = MaterialTheme.typography.headlineMedium
-                    )
-                    Text(
-                        text = stringResource(id = R.string.the_word_was, viewModel.getFormattedSolution()),
-                        style = MaterialTheme.typography.headlineMedium
-                    )
-                }
             }
         }
-        Row (
-            horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.lg))
-        ) {
+        item {
             if (viewModel.result.isNotEmpty()) {
-                Button(onClick = { viewModel.playGame("Rematch") }) {
+                if (viewModel.hasWon()) {
+                    Log.i("GameScreen", "You won. The word was: ${viewModel.getFormattedSolution()}")
+                    Toast.makeText(
+                        context,
+                        stringResource(id = R.string.congratulations_you_won),
+                        Toast.LENGTH_LONG
+                    ).show()
+                } else {
+                    Log.i("GameScreen", "You lost. The word was: ${viewModel.getFormattedSolution()}")
+                    Toast.makeText(
+                        context,
+                        stringResource(id = R.string.you_lost) + " " +
+                                stringResource(id = R.string.the_word_was, viewModel.getFormattedSolution()),
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+        }
+        item {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.lg)),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                if (viewModel.result.isNotEmpty()) {
+                    val rematchText = stringResource(id = R.string.rematch)
+                    Button(onClick = {
+                        viewModel.playGame(rematchText)
+                    }) {
+                        Text(
+                            text = stringResource(id = R.string.play_again),
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    }
+                }
+                Button(onClick = { viewModel.quitGame() }) {
                     Text(
-                        text = stringResource(id = R.string.play_again),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onError
+                        text = stringResource(id = R.string.quit_game),
+                        style = MaterialTheme.typography.bodyMedium
                     )
                 }
             }
-            Button(onClick = { viewModel.quitGame() }) {
-                Text(
-                    text = stringResource(id = R.string.quit_game),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onError
-                )
-            }
         }
-
     }
 }
-
-

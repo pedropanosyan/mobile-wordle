@@ -17,24 +17,24 @@ interface GamesDao {
     @Query("SELECT * FROM game")
     fun getAllGames(): LiveData<List<Game>>
 
-    @Query("SELECT COUNT(*) FROM game")
+    @Query("SELECT IFNULL(COUNT(*), 0) FROM game")
     fun getTotalGamesPlayed(): LiveData<Int>
 
-    @Query("SELECT COUNT(*) FROM game WHERE hasWon = 1")
+    @Query("SELECT IFNULL(COUNT(*), 0) FROM game WHERE hasWon = 1")
     fun getTotalWins(): LiveData<Int>
 
-    @Query("SELECT COUNT(*) FROM game WHERE hasWon = 0")
+    @Query("SELECT IFNULL(COUNT(*), 0) FROM game WHERE hasWon = 0")
     fun getTotalLosses(): LiveData<Int>
 
-    @Query("SELECT MIN(timePlayed) FROM game WHERE hasWon = 1")
+    @Query("SELECT IFNULL(MIN(timePlayed), 0) FROM game WHERE hasWon = 1")
     fun getBestWinningTime(): LiveData<Int>
 
-    @Query("SELECT MAX(timePlayed) FROM game WHERE hasWon = 1")
+    @Query("SELECT IFNULL(MAX(timePlayed), 0) FROM game WHERE hasWon = 1")
     fun getWorstWinningTime(): LiveData<Int>
 
-    @Query("SELECT AVG(timePlayed) FROM game")
+    @Query("SELECT IFNULL(AVG(timePlayed), 0) FROM game")
     fun getAverageMatchTime(): LiveData<Int>
 
-    @Query("SELECT SUM(timePlayed) FROM game")
+    @Query("SELECT IFNULL(SUM(timePlayed), 0) FROM game")
     fun getTotalTimePlayed(): LiveData<Int>
 }

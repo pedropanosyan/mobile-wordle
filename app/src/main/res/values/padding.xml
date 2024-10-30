@@ -7,4 +7,10 @@
     <dimen name="xl">24.dp</dimen>
     <dimen name="xxl">32.dp</dimen>
     <dimen name="xxxl">48.dp</dimen>
+
+    <dimen name="twentyEight">28.dp</dimen>
+    <dimen name="fiftyTwo">56.dp</dimen>
+    <dimen name="eighty">80.dp</dimen>
+    <dimen name="wordle">350.dp</dimen>
+    <dimen name="maxHeight">150.dp</dimen>
 </resources>

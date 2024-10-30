@@ -46,5 +46,5 @@ fun Chip(label: String, value: String, color: Color = MaterialTheme.colorScheme.
 @Preview(showBackground = true)
 @Composable
 fun ChipPreview() {
-    Chip(label = "Score", value = "85", color = Color(0xFF6200EA))
+    Chip(label = "Score", value = "85", color = MaterialTheme.colorScheme.primary)
 }

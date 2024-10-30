@@ -1,5 +1,6 @@
 package com.example.wordle.navigation
 
+import androidx.compose.foundation.background
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Star
@@ -7,15 +8,24 @@ import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemColors
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
+import com.example.wordle.R
 import com.example.wordle.common.TabBarBadgeView
 
 @Composable
@@ -44,7 +54,10 @@ fun TabView(tabBarItems: List<TabBarItem>, onNavigate: (String) -> Unit) {
         mutableIntStateOf(0)
     }
 
-    NavigationBar {
+    NavigationBar (
+        containerColor = MaterialTheme.colorScheme.primary
+    ) {
+
         tabBarItems.forEachIndexed { index, tabBarItem ->
             NavigationBarItem(
                 selected = selectedTabIndex == index,
@@ -61,7 +74,31 @@ fun TabView(tabBarItems: List<TabBarItem>, onNavigate: (String) -> Unit) {
                         badgeAmount = tabBarItem.badgeAmount
                     )
                 },
-                label = { Text(tabBarItem.title) })
+                colors = NavigationBarItemDefaults.colors(
+                    selectedIconColor = MaterialTheme.colorScheme.secondary,
+                    unselectedIconColor = Color.White,
+                    selectedTextColor = Color.White,
+                    unselectedTextColor = Color.White,
+                    indicatorColor = Color.Transparent
+                ),
+                label = {
+                    if (selectedTabIndex == index) {
+                        Text(
+                            text = tabBarItem.title,
+                            color = MaterialTheme.colorScheme.secondary,
+                            fontSize = dimensionResource(id = R.dimen.lg).value.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    } else {
+                        Text(
+                            text = tabBarItem.title,
+                            color = Color.White,
+                            fontSize = dimensionResource(id = R.dimen.lg).value.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        }
+                }
+            )
         }
     }
 }

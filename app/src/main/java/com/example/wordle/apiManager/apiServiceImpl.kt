@@ -2,6 +2,8 @@ package com.example.wordle.apiManager
 
 import android.content.Context
 import android.widget.Toast
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import com.example.wordle.R
 import retrofit.Call
 import retrofit.Callback
@@ -38,7 +40,7 @@ class ApiServiceImpl @Inject constructor() {
             }
 
             override fun onFailure(t: Throwable?) {
-                Toast.makeText(context, "Failed to fetch word", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, R.string.api_failed, Toast.LENGTH_SHORT).show()
                 onFail()
                 loadingFinished()
             }

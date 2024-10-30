@@ -75,7 +75,7 @@ fun ProfileScreen(
                 text = stringResource(id = R.string.profile),
                 style = MaterialTheme.typography.headlineLarge.copy(
                     fontWeight = FontWeight.Bold,
-                    fontSize = 32.sp
+                    fontSize = dimensionResource(id = R.dimen.xxl).value.sp
                 )
             )
         }
@@ -87,7 +87,7 @@ fun ProfileScreen(
                 text = stringResource(id = R.string.performance),
                 style = MaterialTheme.typography.headlineLarge.copy(
                     fontWeight = FontWeight.Bold,
-                    fontSize = 24.sp
+                    fontSize = dimensionResource(id = R.dimen.xl).value.sp
                 )
             )
         }
@@ -105,7 +105,7 @@ fun ProfileScreen(
                 text = stringResource(id = R.string.time_scores),
                 style = MaterialTheme.typography.headlineLarge.copy(
                     fontWeight = FontWeight.Bold,
-                    fontSize = 24.sp
+                    fontSize = dimensionResource(id = R.dimen.xl).value.sp
                 )
             )
         }
@@ -128,7 +128,7 @@ fun ProfileScreen(
                 text = stringResource(id = R.string.strike_scores),
                 style = MaterialTheme.typography.headlineLarge.copy(
                     fontWeight = FontWeight.Bold,
-                    fontSize = 24.sp
+                    fontSize = dimensionResource(id = R.dimen.xl).value.sp
                 )
             )
         }
@@ -151,7 +151,7 @@ fun ProfileScreen(
                 text = stringResource(id = R.string.current_strike_score),
                 style = MaterialTheme.typography.headlineLarge.copy(
                     fontWeight = FontWeight.Bold,
-                    fontSize = 24.sp
+                    fontSize = dimensionResource(id = R.dimen.xl).value.sp
                 )
             )
         }
@@ -159,14 +159,17 @@ fun ProfileScreen(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(80.dp)
-                    .background(getLastGameColor(games = allGames), RoundedCornerShape(dimensionResource(id = R.dimen.lg)))
+                    .height(dimensionResource(id = R.dimen.eighty))
+                    .background(
+                        getLastGameColor(games = allGames),
+                        RoundedCornerShape(dimensionResource(id = R.dimen.lg))
+                    )
             ) {
                 Text(
                     text = getCurrentStrike(games = allGames).toString() + getLastGameIcon(games = allGames),
                     style = MaterialTheme.typography.headlineLarge.copy(
                         fontWeight = FontWeight.Bold,
-                        fontSize = 48.sp,
+                        fontSize = dimensionResource(id = R.dimen.xxxl).value.sp,
                         color = Color.White
                     ),
                     modifier = Modifier.align(Alignment.Center)
@@ -178,7 +181,7 @@ fun ProfileScreen(
                 text = stringResource(id = R.string.extra_stats),
                 style = MaterialTheme.typography.headlineLarge.copy(
                     fontWeight = FontWeight.Bold,
-                    fontSize = 24.sp
+                    fontSize = dimensionResource(id = R.dimen.xl).value.sp
                 )
             )
         }

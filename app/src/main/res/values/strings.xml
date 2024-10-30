@@ -1,26 +1,47 @@
 <resources>
     <string name="app_name">Wordle</string>
-    <string name="congratulations_you_won">Felicidades! Ganaste!</string>
-    <string name="you_lost">Perdiste!</string>
+    <string name="congratulations_you_won">¡Felicidades! ¡Ganaste!</string>
+    <string name="you_lost">¡Perdiste!</string>
     <string name="the_word_was">La palabra era: %1$s</string>
-    <string name="play_again">Play again</string>
-    <string name="quit_game">Quit Game</string>
-    <string name="enter">Enter</string>
-    <string name="delete">Delete</string>
+    <string name="play">Comenzar juego</string>
+    <string name="play_again">Jugar de nuevo</string>
+    <string name="quit_game">Salir del juego</string>
+    <string name="enter">Entrar</string>
+    <string name="delete">Borrar</string>
+    <string name="settings">Selecciona modo</string>
+    <string name="rematch">Revancha</string>
+    <string name="select_difficulty">Configuracion del juego</string>
 
-    <string name="total_games">Total Games</string>
-    <string name="total_wins">Total Wins</string>
-    <string name="total_losses">Total Losses</string>
-    <string name="profile">Profile Screen</string>
-    <string name="performance">Overall Performance</string>
-    <string name="time_scores">Time Scores</string>
-    <string name="best_winning_time">Best winning time</string>
-    <string name="worst_winning_time">Worst winning time</string>
-    <string name="strike_scores">Strike scores</string>
-    <string name="best_strike_score">Best strike ✅</string>
-    <string name="worst_strike_score">Worst strike ❌</string>
-    <string name="current_strike_score">Current strike</string>
-    <string name="extra_stats">Extra stats</string>
-    <string name="total_time_played">Total time played</string>
-    <string name="average_match_time">Average match time</string>
+    <string name="total_games">Juegos totales</string>
+    <string name="total_wins">Victorias totales</string>
+    <string name="total_losses">Derrotas totales</string>
+    <string name="profile">Pantalla de perfil</string>
+    <string name="performance">Rendimiento general</string>
+    <string name="time_scores">Puntajes de tiempo</string>
+    <string name="best_winning_time">Mejor tiempo</string>
+    <string name="worst_winning_time">Peor tiempo</string>
+    <string name="strike_scores">Rachas</string>
+    <string name="best_strike_score">Mejor racha ✅</string>
+    <string name="worst_strike_score">Peor racha ❌</string>
+    <string name="current_strike_score">Racha actual</string>
+    <string name="extra_stats">Estadísticas adicionales</string>
+    <string name="total_time_played">Tiempo total jugado</string>
+    <string name="average_match_time">Tiempo promedio</string>
+
+    <string name="api_failed">Error al obtener la palabra</string>
+
+    <string name="easy">Facil</string>
+    <string name="medium">Medio</string>
+    <string name="hard">Dificil</string>
+    <string name="expert">Experto</string>
+
+    <string name="biometric_auth_error">There was an error in the authentication</string>
+    <string name="biometric_auth_failed">The authentication failed, try again</string>
+    <string name="biometric_no_hardware">This phone is not prepared for biometric features</string>
+    <string name="biometric_unavailable">Biometric auth is unavailable</string>
+    <string name="biometric_security_update_required">You can\'t use biometric auth until you have updated your security details</string>
+    <string name="biometric_unsupported">You can\'t use biometric auth with this Android version</string>
+    <string name="biometric_unknown_status">Unable to determine whether you can authenticate using biometrics</string>
+    <string name="biometric_not_enrolled">You can\'t use biometric auth</string>
+
 </resources>

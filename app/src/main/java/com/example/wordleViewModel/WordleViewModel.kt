@@ -124,7 +124,7 @@ class WordleViewModel @Inject constructor(
                 result = "won"
                 addGame(true, ((System.currentTimeMillis() - startTime) / 1000).toInt())
             }
-            if (currentRow == 5) {
+            if (currentRow == guesses.size - 1) {
                 result = "lost"
                 addGame(false, ((System.currentTimeMillis() - startTime) / 1000).toInt())
             }
@@ -188,11 +188,11 @@ fun normalize(word: String): String {
 
 fun getSizeFromMode(mode: String, previous: Int): Int {
     return when (mode) {
-        "Easy" -> 8
-        "Medium" -> 6
-        "Hard" -> 5
-        "Expert" -> 3
-        "Rematch" -> previous
+        "Facil" -> 8
+        "Medio" -> 6
+        "Dificil" -> 5
+        "Experto" -> 3
+        "Revancha" -> previous
         else -> 6
     }
 }

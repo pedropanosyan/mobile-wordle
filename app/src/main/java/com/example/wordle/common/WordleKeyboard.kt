@@ -94,8 +94,8 @@ fun KeyButton(option: String, onKeyPress: (option: String) -> Unit, solution: St
 fun SpecialKeyButton(text: String, onClick: () -> Unit) {
     Box(
         modifier = Modifier
-            .size(56.dp, 28.dp)
-            .background(MaterialTheme.colorScheme.onSurface, RoundedCornerShape(4.dp))
+            .size(dimensionResource(id = R.dimen.fiftyTwo), dimensionResource(id = R.dimen.twentyEight))
+            .background(MaterialTheme.colorScheme.onSurface, RoundedCornerShape(dimensionResource(id = R.dimen.sm)))
             .padding(dimensionResource(id = R.dimen.sm))
             .clickable { onClick() },
         contentAlignment = Alignment.Center
