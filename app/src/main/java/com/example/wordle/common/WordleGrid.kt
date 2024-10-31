@@ -125,7 +125,7 @@ fun LetterBox(char: Char, backgroundColor: Color, delayMs: Long) {
     ) {
         Text(
             text = char.toString(),
-            color = Color.White
+            color = MaterialTheme.colorScheme.onTertiary,
         )
     }
 }

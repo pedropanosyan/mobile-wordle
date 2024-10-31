@@ -1,6 +1,5 @@
 package com.example.wordle.common
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -58,14 +57,12 @@ fun GameScreen(
         item {
             if (viewModel.result.isNotEmpty()) {
                 if (viewModel.hasWon()) {
-                    Log.i("GameScreen", "You won. The word was: ${viewModel.getFormattedSolution()}")
                     Toast.makeText(
                         context,
                         stringResource(id = R.string.congratulations_you_won),
                         Toast.LENGTH_LONG
                     ).show()
                 } else {
-                    Log.i("GameScreen", "You lost. The word was: ${viewModel.getFormattedSolution()}")
                     Toast.makeText(
                         context,
                         stringResource(id = R.string.you_lost) + " " +

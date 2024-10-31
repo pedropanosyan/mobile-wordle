@@ -76,9 +76,9 @@ fun TabView(tabBarItems: List<TabBarItem>, onNavigate: (String) -> Unit) {
                 },
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = MaterialTheme.colorScheme.secondary,
-                    unselectedIconColor = Color.White,
-                    selectedTextColor = Color.White,
-                    unselectedTextColor = Color.White,
+                    unselectedIconColor = MaterialTheme.colorScheme.onTertiary,
+                    selectedTextColor = MaterialTheme.colorScheme.onTertiary,
+                    unselectedTextColor = MaterialTheme.colorScheme.onTertiary,
                     indicatorColor = Color.Transparent
                 ),
                 label = {

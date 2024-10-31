@@ -66,8 +66,8 @@ fun DifficultySelector(
             onDismissRequest = { expanded = false },
             modifier = Modifier
                 .fillMaxWidth(0.9f)
-                .background(Color.White)
-                .padding(4.dp)
+                .background(MaterialTheme.colorScheme.onTertiary)
+                .padding(dimensionResource(id = R.dimen.sm))
         ) {
             difficultyStrings.forEach { difficulty ->
                 DropdownMenuItem(
@@ -75,9 +75,9 @@ fun DifficultySelector(
                         Text(
                             text = difficulty,
                             style = MaterialTheme.typography.bodyMedium.copy(
-                                fontSize = 18.sp,
+                                fontSize = dimensionResource(id = R.dimen.eighteen).value.sp,
                                 fontWeight = if (difficulty == selectedDifficulty) FontWeight.Bold else FontWeight.Normal,
-                                color = if (difficulty == selectedDifficulty) MaterialTheme.colorScheme.primary else Color.Gray
+                                color = if (difficulty == selectedDifficulty) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline
                             ),
                         )
                     },
@@ -87,9 +87,13 @@ fun DifficultySelector(
                     },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 8.dp)
+                        .padding(
+                            dimensionResource(id = R.dimen.md),
+                        )
                         .background(
-                            if (difficulty == selectedDifficulty) MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
+                            if (difficulty == selectedDifficulty) MaterialTheme.colorScheme.primary.copy(
+                                alpha = 0.1f
+                            )
                             else Color.Transparent
                         )
                 )

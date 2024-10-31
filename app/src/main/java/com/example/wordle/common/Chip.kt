@@ -24,7 +24,7 @@ import com.example.wordle.R
 fun Chip(label: String, value: String, color: Color = MaterialTheme.colorScheme.tertiary) {
     Column(
         modifier = Modifier
-            .background(color.copy(alpha = 0.1f), RoundedCornerShape(16.dp))
+            .background(color.copy(alpha = 0.1f), RoundedCornerShape(dimensionResource(id = R.dimen.lg)))
             .padding(
                 vertical = dimensionResource(id = R.dimen.md),
                 horizontal = dimensionResource(id = R.dimen.md2)
