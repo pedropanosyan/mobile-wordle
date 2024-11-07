@@ -1,0 +1,47 @@
+<resources>
+    <string name="app_name">Wordle</string>
+    <string name="congratulations_you_won">Congratulations! You won!</string>
+    <string name="you_lost">You lost!</string>
+    <string name="the_word_was">The word was: %1$s</string>
+    <string name="play">start game</string>
+    <string name="play_again">play again</string>
+    <string name="quit_game">Exit the game</string>
+    <string name="enter">To enter</string>
+    <string name="delete">Delete</string>
+    <string name="settings">Select mode</string>
+    <string name="rematch">Rematch</string>
+    <string name="select_difficulty">Game settings</string>
+
+    <string name="total_games">Total games</string>
+    <string name="total_wins">Total wins</string>
+    <string name="total_losses">Total losses</string>
+    <string name="profile">Profile screen</string>
+    <string name="performance">Overall performance</string>
+    <string name="time_scores">Time scores</string>
+    <string name="best_winning_time">Best time</string>
+    <string name="worst_winning_time">worst time</string>
+    <string name="strike_scores">Streaks</string>
+    <string name="best_strike_score">Best streak ✅</string>
+    <string name="worst_strike_score">Worst streak ❌</string>
+    <string name="current_strike_score">Current streak</string>
+    <string name="extra_stats">Additional statistics</string>
+    <string name="total_time_played">Total time played</string>
+    <string name="average_match_time">Average time</string>
+
+    <string name="api_failed">Error getting word</string>
+
+    <string name="easy">Easy</string>
+    <string name="medium">Half</string>
+    <string name="hard">Difficult</string>
+    <string name="expert">Expert</string>
+
+    <string name="biometric_auth_error">There was an error in the authentication</string>
+    <string name="biometric_auth_failed">The authentication failed, try again</string>
+    <string name="biometric_no_hardware">This phone is not prepared for biometric features</string>
+    <string name="biometric_unavailable">Biometric auth is unavailable</string>
+    <string name="biometric_security_update_required">You can\'t use biometric auth until you have updated your security details</string>
+    <string name="biometric_unsupported">You can\'t use biometric auth with this Android version</string>
+    <string name="biometric_unknown_status">Unable to determine whether you can authenticate using biometrics</string>
+    <string name="biometric_not_enrolled">You can\'t use biometric auth</string>
+
+</resources>

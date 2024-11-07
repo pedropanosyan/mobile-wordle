@@ -84,7 +84,7 @@ fun KeyButton(option: String, onKeyPress: (option: String) -> Unit, solution: St
     ) {
         Text(
             text = option,
-            color = MaterialTheme.colorScheme.onSurface,
+            color = MaterialTheme.colorScheme.background,
             style = MaterialTheme.typography.bodySmall
         )
     }
@@ -102,7 +102,7 @@ fun SpecialKeyButton(text: String, onClick: () -> Unit) {
     ) {
         Text(
             text = text,
-            color = Color.White,
+            color = MaterialTheme.colorScheme.background,
             style = MaterialTheme.typography.bodySmall
         )
     }
